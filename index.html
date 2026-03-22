@@ -778,11 +778,12 @@ function switchToSession(id) {
 }
 
 // =================================================================
-// LOCAL TEMPLATE  (per-device, never synced)
+// TEMPLATE  (shared via Firestore, falls back to localStorage)
 // =================================================================
 let template = null;
 
 function loadTemplate() {
+  // Only used as initial fallback before Firestore responds
   try {
     const raw = localStorage.getItem(TEMPLATE_KEY);
     template = raw ? JSON.parse(raw) : deepClone(FACTORY_DEFAULT);
@@ -795,7 +796,22 @@ function loadTemplate() {
 }
 
 function saveTemplate() {
+  // Cache locally for offline fallback
   localStorage.setItem(TEMPLATE_KEY, JSON.stringify(template));
+  // Write to Firestore — include template in the session doc
+  scheduleTemplateWrite();
+}
+
+let templateWriteTimer = null;
+function scheduleTemplateWrite() {
+  if (!db) return;
+  if (templateWriteTimer) clearTimeout(templateWriteTimer);
+  templateWriteTimer = setTimeout(() => {
+    const sid = currentSessionId();
+    db.collection("sessions").doc(sid)
+      .set({ template }, { merge: true })
+      .catch(e => console.error("Template write failed:", e));
+  }, 350);
 }
 
 function deepClone(obj) { return JSON.parse(JSON.stringify(obj)); }
@@ -831,8 +847,9 @@ function scheduleWrite() {
   if (writeTimer) clearTimeout(writeTimer);
   writeTimer = setTimeout(() => {
     const sid = currentSessionId();
+    // Write state only (template has its own write path via scheduleTemplateWrite)
     db.collection("sessions").doc(sid)
-      .set({ state }, { merge: false })
+      .set({ state }, { merge: true })
       .then(() => {
         setSyncStatus("online");
         writeSummary(sid);
@@ -892,22 +909,32 @@ function attachListener(sessionId) {
   setSyncStatus("syncing");
   const ref = db.collection("sessions").doc(sessionId);
 
-  // If doc doesn't exist yet, seed it from template
+  // If doc doesn't exist yet, seed both state and template from factory default
   ref.get().then(snap => {
     if (!snap.exists) {
+      template = deepClone(FACTORY_DEFAULT);
       state = stateFromTemplate();
-      ref.set({ state }).catch(console.error);
+      ref.set({ state, template }).catch(console.error);
+      localStorage.setItem(TEMPLATE_KEY, JSON.stringify(template));
     }
   }).catch(console.error);
 
   unsubscribe = ref.onSnapshot(
     { includeMetadataChanges: true },
     snap => {
-      // If this is our own pending write, skip to avoid flicker
       if (snap.metadata.hasPendingWrites) return;
       if (!snap.exists) return;
 
       const data = snap.data();
+
+      // Sync template from Firestore
+      if (data?.template) {
+        template = data.template;
+        for (const id of CATEGORY_IDS)
+          if (!Array.isArray(template[id])) template[id] = [];
+        localStorage.setItem(TEMPLATE_KEY, JSON.stringify(template));
+      }
+
       if (data?.state) {
         state = data.state;
         for (const id of CATEGORY_IDS)
