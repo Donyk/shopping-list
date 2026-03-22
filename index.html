@@ -64,13 +64,18 @@
       backdrop-filter: blur(8px);
       border: 1px solid var(--card-border);
       border-radius: var(--radius);
-      padding: 10px 14px;
-      margin-bottom: 14px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .session-top {
       display: flex;
       align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      box-shadow: var(--shadow);
+      gap: 8px;
     }
 
     .session-left {
@@ -139,7 +144,42 @@
     .session-actions {
       display: flex;
       gap: 6px;
-      flex-wrap: wrap;
+    }
+    .session-actions .btn {
+      flex: 1;
+      text-align: center;
+      font-size: 0.82rem;
+      padding: 7px 8px;
+    }
+
+    /* ── Collapse ───────────────────────────────────────────────── */
+    .category h2 {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      gap: 6px;
+    }
+    .category h2 .h2-label { flex: 1; }
+    .collapse-chevron {
+      font-style: normal;
+      font-size: 0.75rem;
+      opacity: 0.4;
+      transition: transform 0.22s ease;
+      flex-shrink: 0;
+    }
+    .category.collapsed .collapse-chevron {
+      transform: rotate(-90deg);
+    }
+    .category-body {
+      overflow: hidden;
+      transition: max-height 0.28s ease, opacity 0.22s ease;
+      max-height: 1200px;
+      opacity: 1;
+    }
+    .category.collapsed .category-body {
+      max-height: 0;
+      opacity: 0;
     }
 
     /* ── Buttons ───────────────────────────────────────────────── */
@@ -213,6 +253,7 @@
       letter-spacing: -0.01em;
       margin-bottom: 8px;
       color: var(--text);
+      /* collapse behaviour set above */
     }
 
     /* ── List ───────────────────────────────────────────────────── */
@@ -424,10 +465,8 @@
     /* ── Responsive ─────────────────────────────────────────────── */
     @media (max-width: 560px) {
       .header h1 { font-size: 1.4rem; }
-      .session-banner { gap: 7px; }
       .add-row { flex-wrap: wrap; }
       .add-row button { flex: 1; }
-      .session-actions { gap: 5px; }
     }
   </style>
 </head>
@@ -436,18 +475,20 @@
 
   <!-- ── Session Banner ──────────────────────────────────────── -->
   <div class="session-banner">
-    <div class="session-left">
-      <span class="sync-pill syncing" id="sync-pill">
-        <span class="sync-dot"></span>
-        <span id="sync-label">Connecting…</span>
-      </span>
-      <span class="session-label">Session</span>
-      <span class="session-code" id="session-code-display">——</span>
+    <div class="session-top">
+      <div class="session-left">
+        <span class="sync-pill syncing" id="sync-pill">
+          <span class="sync-dot"></span>
+          <span id="sync-label">Connecting…</span>
+        </span>
+        <span class="session-label">Session</span>
+        <span class="session-code" id="session-code-display">——</span>
+      </div>
     </div>
     <div class="session-actions">
-      <button class="btn icon" id="share-btn" type="button" title="Copy link to share with your wife">🔗 Share</button>
-      <button class="btn icon" id="join-btn" type="button" title="Join another session">Enter code</button>
-      <button class="btn icon" id="new-session-btn" type="button" title="Start a new empty session">＋ New</button>
+      <button class="btn" id="share-btn" type="button">🔗 Share</button>
+      <button class="btn" id="join-btn" type="button">Enter code</button>
+      <button class="btn" id="new-session-btn" type="button">＋ New</button>
     </div>
   </div>
 
@@ -474,103 +515,123 @@
   </header>
 
   <!-- ── Categories ──────────────────────────────────────────── -->
-  <section class="category">
-    <h2>🥛 Dairy Products</h2>
+  <section class="category" data-cat="dairy-products">
+    <h2><span class="h2-label">🥛 Dairy Products</span><i class="collapse-chevron">▼</i></h2>
+    <div class="category-body">
     <ul id="dairy-products"></ul>
     <div class="add-row">
       <input type="text" id="inp-dairy" placeholder="Add dairy item…" />
       <button data-action="add-current" data-list="dairy-products" data-input="inp-dairy" type="button">Add</button>
       <button data-action="add-default" data-list="dairy-products" data-input="inp-dairy" type="button">Add to default</button>
     </div>
+    </div>
   </section>
 
-  <section class="category">
-    <h2>🍞 Bakery &amp; Grains</h2>
+  <section class="category" data-cat="bakery-grains">
+    <h2><span class="h2-label">🍞 Bakery &amp; Grains</span><i class="collapse-chevron">▼</i></h2>
+    <div class="category-body">
     <ul id="bakery-grains"></ul>
     <div class="add-row">
       <input type="text" id="inp-bakery" placeholder="Add bakery item…" />
       <button data-action="add-current" data-list="bakery-grains" data-input="inp-bakery" type="button">Add</button>
       <button data-action="add-default" data-list="bakery-grains" data-input="inp-bakery" type="button">Add to default</button>
     </div>
+    </div>
   </section>
 
-  <section class="category">
-    <h2>🫙 Pantry Staples</h2>
+  <section class="category" data-cat="pantry-staples">
+    <h2><span class="h2-label">🫙 Pantry Staples</span><i class="collapse-chevron">▼</i></h2>
+    <div class="category-body">
     <ul id="pantry-staples"></ul>
     <div class="add-row">
       <input type="text" id="inp-pantry" placeholder="Add pantry item…" />
       <button data-action="add-current" data-list="pantry-staples" data-input="inp-pantry" type="button">Add</button>
       <button data-action="add-default" data-list="pantry-staples" data-input="inp-pantry" type="button">Add to default</button>
     </div>
+    </div>
   </section>
 
-  <section class="category">
-    <h2>☕ Breakfast</h2>
+  <section class="category" data-cat="breakfast">
+    <h2><span class="h2-label">☕ Breakfast</span><i class="collapse-chevron">▼</i></h2>
+    <div class="category-body">
     <ul id="breakfast"></ul>
     <div class="add-row">
       <input type="text" id="inp-breakfast" placeholder="Add breakfast item…" />
       <button data-action="add-current" data-list="breakfast" data-input="inp-breakfast" type="button">Add</button>
       <button data-action="add-default" data-list="breakfast" data-input="inp-breakfast" type="button">Add to default</button>
     </div>
+    </div>
   </section>
 
-  <section class="category">
-    <h2>🧴 Personal Care</h2>
+  <section class="category" data-cat="personal-care">
+    <h2><span class="h2-label">🧴 Personal Care</span><i class="collapse-chevron">▼</i></h2>
+    <div class="category-body">
     <ul id="personal-care"></ul>
     <div class="add-row">
       <input type="text" id="inp-personal" placeholder="Add personal care item…" />
       <button data-action="add-current" data-list="personal-care" data-input="inp-personal" type="button">Add</button>
       <button data-action="add-default" data-list="personal-care" data-input="inp-personal" type="button">Add to default</button>
     </div>
+    </div>
   </section>
 
-  <section class="category">
-    <h2>🧹 Cleaning Supplies</h2>
+  <section class="category" data-cat="cleaning-supplies">
+    <h2><span class="h2-label">🧹 Cleaning Supplies</span><i class="collapse-chevron">▼</i></h2>
+    <div class="category-body">
     <ul id="cleaning-supplies"></ul>
     <div class="add-row">
       <input type="text" id="inp-cleaning" placeholder="Add cleaning item…" />
       <button data-action="add-current" data-list="cleaning-supplies" data-input="inp-cleaning" type="button">Add</button>
       <button data-action="add-default" data-list="cleaning-supplies" data-input="inp-cleaning" type="button">Add to default</button>
     </div>
+    </div>
   </section>
 
-  <section class="category">
-    <h2>🏠 Household Items</h2>
+  <section class="category" data-cat="household-items">
+    <h2><span class="h2-label">🏠 Household Items</span><i class="collapse-chevron">▼</i></h2>
+    <div class="category-body">
     <ul id="household-items"></ul>
     <div class="add-row">
       <input type="text" id="inp-household" placeholder="Add household item…" />
       <button data-action="add-current" data-list="household-items" data-input="inp-household" type="button">Add</button>
       <button data-action="add-default" data-list="household-items" data-input="inp-household" type="button">Add to default</button>
     </div>
+    </div>
   </section>
 
-  <section class="category">
-    <h2>🍫 Snacks</h2>
+  <section class="category" data-cat="snacks">
+    <h2><span class="h2-label">🍫 Snacks</span><i class="collapse-chevron">▼</i></h2>
+    <div class="category-body">
     <ul id="snacks"></ul>
     <div class="add-row">
       <input type="text" id="inp-snacks" placeholder="Add snack item…" />
       <button data-action="add-current" data-list="snacks" data-input="inp-snacks" type="button">Add</button>
       <button data-action="add-default" data-list="snacks" data-input="inp-snacks" type="button">Add to default</button>
     </div>
+    </div>
   </section>
 
-  <section class="category">
-    <h2>🥦 Fruits &amp; Vegetables</h2>
+  <section class="category" data-cat="fruits-vegetables">
+    <h2><span class="h2-label">🥦 Fruits &amp; Vegetables</span><i class="collapse-chevron">▼</i></h2>
+    <div class="category-body">
     <ul id="fruits-vegetables"></ul>
     <div class="add-row">
       <input type="text" id="inp-fv" placeholder="Add fruit or vegetable…" />
       <button data-action="add-current" data-list="fruits-vegetables" data-input="inp-fv" type="button">Add</button>
       <button data-action="add-default" data-list="fruits-vegetables" data-input="inp-fv" type="button">Add to default</button>
     </div>
+    </div>
   </section>
 
-  <section class="category">
-    <h2>📦 Others</h2>
+  <section class="category" data-cat="others">
+    <h2><span class="h2-label">📦 Others</span><i class="collapse-chevron">▼</i></h2>
+    <div class="category-body">
     <ul id="others"></ul>
     <div class="add-row">
       <input type="text" id="inp-others" placeholder="Add other item…" />
       <button data-action="add-current" data-list="others" data-input="inp-others" type="button">Add</button>
       <button data-action="add-default" data-list="others" data-input="inp-others" type="button">Add to default</button>
+    </div>
     </div>
   </section>
 
@@ -1005,6 +1066,25 @@ function wireAll() {
   document.getElementById("new-session-btn")?.addEventListener("click", () => {
     if (!confirm("Start a brand new empty session?\nYour current session still exists — save the code if you need it.")) return;
     switchToSession(genSessionId());
+  });
+
+  // Collapse sections (local per device)
+  const COLLAPSE_KEY = "shoppingList.v3.collapsed";
+  const collapsedSet = new Set(JSON.parse(localStorage.getItem(COLLAPSE_KEY) || "[]"));
+
+  function saveCollapsed() {
+    localStorage.setItem(COLLAPSE_KEY, JSON.stringify([...collapsedSet]));
+  }
+
+  document.querySelectorAll(".category[data-cat]").forEach(section => {
+    const catId = section.dataset.cat;
+    if (collapsedSet.has(catId)) section.classList.add("collapsed");
+
+    section.querySelector("h2").addEventListener("click", () => {
+      const isNowCollapsed = section.classList.toggle("collapsed");
+      isNowCollapsed ? collapsedSet.add(catId) : collapsedSet.delete(catId);
+      saveCollapsed();
+    });
   });
 }
 
