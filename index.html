@@ -824,7 +824,6 @@ function norm(s) { return String(s || "").trim().toLowerCase(); }
 // Debounced write: waits 350ms after last change before writing
 function scheduleWrite() {
   if (!db) {
-    // Fallback: write to localStorage
     localStorage.setItem("shoppingList.v3.state." + currentSessionId(), JSON.stringify(state));
     return;
   }
@@ -834,9 +833,58 @@ function scheduleWrite() {
     const sid = currentSessionId();
     db.collection("sessions").doc(sid)
       .set({ state }, { merge: false })
-      .then(() => setSyncStatus("online"))
+      .then(() => {
+        setSyncStatus("online");
+        writeSummary(sid);
+      })
       .catch(e => { console.error("Write failed:", e); setSyncStatus("offline"); });
   }, 350);
+}
+
+// Flat summary document — easy for KWGT to parse
+function buildSummary() {
+  const LABELS = {
+    "dairy-products":    "🥛 Dairy",
+    "bakery-grains":     "🍞 Bakery",
+    "pantry-staples":    "🫙 Pantry",
+    "breakfast":         "☕ Breakfast",
+    "personal-care":     "🧴 Personal Care",
+    "cleaning-supplies": "🧹 Cleaning",
+    "household-items":   "🏠 Household",
+    "snacks":            "🍫 Snacks",
+    "fruits-vegetables": "🥦 Fruits & Veg",
+    "others":            "📦 Others"
+  };
+
+  let totalItems = 0, totalUnchecked = 0;
+  const sectionLines = [];
+  const uncheckedItems = [];
+
+  for (const id of CATEGORY_IDS) {
+    const items = state[id] || [];
+    if (items.length === 0) continue;
+    const unchecked = items.filter(it => !it.crossed);
+    totalItems    += items.length;
+    totalUnchecked += unchecked.length;
+    if (unchecked.length > 0) {
+      sectionLines.push(`${LABELS[id]}: ${unchecked.length}/${items.length}`);
+      unchecked.forEach(it => uncheckedItems.push(it.text));
+    }
+  }
+
+  const preview = uncheckedItems.slice(0, 12).join(" · ") || "All done! ✓";
+  const sections = sectionLines.join("\n") || "Nothing to buy";
+
+  return { totalItems, totalUnchecked, preview, sections,
+           updated: new Date().toISOString() };
+}
+
+function writeSummary(sid) {
+  if (!db) return;
+  const summary = buildSummary();
+  db.collection("summaries").doc(sid)
+    .set(summary)
+    .catch(e => console.warn("Summary write failed:", e));
 }
 
 function attachListener(sessionId) {
