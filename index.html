@@ -152,35 +152,60 @@
       padding: 7px 8px;
     }
 
-    /* ── Collapse ───────────────────────────────────────────────── */
+    /* ── Collapse & Move ────────────────────────────────────────── */
     .category h2 {
       display: flex;
       align-items: center;
       cursor: pointer;
       user-select: none;
-      gap: 6px;
+      gap: 5px;
     }
     .category h2 .h2-label { flex: 1; }
+
+    .move-btn {
+      flex-shrink: 0;
+      background: none;
+      border: none;
+      padding: 2px 4px;
+      font-size: 0.7rem;
+      opacity: 0.28;
+      line-height: 1;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: opacity var(--transition), background var(--transition);
+    }
+    .move-btn:hover { opacity: 0.75; background: rgba(0,0,0,0.06); }
+    .move-btn:disabled { opacity: 0.1; cursor: default; }
+
+    .cat-count {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--muted);
+      opacity: 0;
+      transition: opacity 0.18s ease;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .cat-count.has-remaining { color: var(--orange); }
+    .cat-count.all-done { color: var(--green); }
+    .category.collapsed .cat-count { opacity: 1; }
+
     .collapse-chevron {
       font-style: normal;
-      font-size: 0.75rem;
-      opacity: 0.4;
+      font-size: 0.72rem;
+      opacity: 0.35;
       transition: transform 0.22s ease;
       flex-shrink: 0;
     }
-    .category.collapsed .collapse-chevron {
-      transform: rotate(-90deg);
-    }
+    .category.collapsed .collapse-chevron { transform: rotate(-90deg); }
+
     .category-body {
       overflow: hidden;
       transition: max-height 0.28s ease, opacity 0.22s ease;
       max-height: 1200px;
       opacity: 1;
     }
-    .category.collapsed .category-body {
-      max-height: 0;
-      opacity: 0;
-    }
+    .category.collapsed .category-body { max-height: 0; opacity: 0; }
 
     /* ── Buttons ───────────────────────────────────────────────── */
     button {
@@ -516,7 +541,7 @@
 
   <!-- ── Categories ──────────────────────────────────────────── -->
   <section class="category" data-cat="dairy-products">
-    <h2><span class="h2-label">🥛 Dairy Products</span><i class="collapse-chevron">▼</i></h2>
+    <h2><button class="move-btn" data-dir="up" type="button">▲</button><button class="move-btn" data-dir="down" type="button">▼</button><span class="h2-label">🥛 Dairy Products</span><span class="cat-count" id="count-dairy-products"></span><i class="collapse-chevron">▼</i></h2>
     <div class="category-body">
     <ul id="dairy-products"></ul>
     <div class="add-row">
@@ -528,7 +553,7 @@
   </section>
 
   <section class="category" data-cat="bakery-grains">
-    <h2><span class="h2-label">🍞 Bakery &amp; Grains</span><i class="collapse-chevron">▼</i></h2>
+    <h2><button class="move-btn" data-dir="up" type="button">▲</button><button class="move-btn" data-dir="down" type="button">▼</button><span class="h2-label">🍞 Bakery &amp; Grains</span><span class="cat-count" id="count-bakery-grains"></span><i class="collapse-chevron">▼</i></h2>
     <div class="category-body">
     <ul id="bakery-grains"></ul>
     <div class="add-row">
@@ -540,7 +565,7 @@
   </section>
 
   <section class="category" data-cat="pantry-staples">
-    <h2><span class="h2-label">🫙 Pantry Staples</span><i class="collapse-chevron">▼</i></h2>
+    <h2><button class="move-btn" data-dir="up" type="button">▲</button><button class="move-btn" data-dir="down" type="button">▼</button><span class="h2-label">🫙 Pantry Staples</span><span class="cat-count" id="count-pantry-staples"></span><i class="collapse-chevron">▼</i></h2>
     <div class="category-body">
     <ul id="pantry-staples"></ul>
     <div class="add-row">
@@ -552,7 +577,7 @@
   </section>
 
   <section class="category" data-cat="breakfast">
-    <h2><span class="h2-label">☕ Breakfast</span><i class="collapse-chevron">▼</i></h2>
+    <h2><button class="move-btn" data-dir="up" type="button">▲</button><button class="move-btn" data-dir="down" type="button">▼</button><span class="h2-label">☕ Breakfast</span><span class="cat-count" id="count-breakfast"></span><i class="collapse-chevron">▼</i></h2>
     <div class="category-body">
     <ul id="breakfast"></ul>
     <div class="add-row">
@@ -564,7 +589,7 @@
   </section>
 
   <section class="category" data-cat="personal-care">
-    <h2><span class="h2-label">🧴 Personal Care</span><i class="collapse-chevron">▼</i></h2>
+    <h2><button class="move-btn" data-dir="up" type="button">▲</button><button class="move-btn" data-dir="down" type="button">▼</button><span class="h2-label">🧴 Personal Care</span><span class="cat-count" id="count-personal-care"></span><i class="collapse-chevron">▼</i></h2>
     <div class="category-body">
     <ul id="personal-care"></ul>
     <div class="add-row">
@@ -576,7 +601,7 @@
   </section>
 
   <section class="category" data-cat="cleaning-supplies">
-    <h2><span class="h2-label">🧹 Cleaning Supplies</span><i class="collapse-chevron">▼</i></h2>
+    <h2><button class="move-btn" data-dir="up" type="button">▲</button><button class="move-btn" data-dir="down" type="button">▼</button><span class="h2-label">🧹 Cleaning Supplies</span><span class="cat-count" id="count-cleaning-supplies"></span><i class="collapse-chevron">▼</i></h2>
     <div class="category-body">
     <ul id="cleaning-supplies"></ul>
     <div class="add-row">
@@ -588,7 +613,7 @@
   </section>
 
   <section class="category" data-cat="household-items">
-    <h2><span class="h2-label">🏠 Household Items</span><i class="collapse-chevron">▼</i></h2>
+    <h2><button class="move-btn" data-dir="up" type="button">▲</button><button class="move-btn" data-dir="down" type="button">▼</button><span class="h2-label">🏠 Household Items</span><span class="cat-count" id="count-household-items"></span><i class="collapse-chevron">▼</i></h2>
     <div class="category-body">
     <ul id="household-items"></ul>
     <div class="add-row">
@@ -600,7 +625,7 @@
   </section>
 
   <section class="category" data-cat="snacks">
-    <h2><span class="h2-label">🍫 Snacks</span><i class="collapse-chevron">▼</i></h2>
+    <h2><button class="move-btn" data-dir="up" type="button">▲</button><button class="move-btn" data-dir="down" type="button">▼</button><span class="h2-label">🍫 Snacks</span><span class="cat-count" id="count-snacks"></span><i class="collapse-chevron">▼</i></h2>
     <div class="category-body">
     <ul id="snacks"></ul>
     <div class="add-row">
@@ -612,7 +637,7 @@
   </section>
 
   <section class="category" data-cat="fruits-vegetables">
-    <h2><span class="h2-label">🥦 Fruits &amp; Vegetables</span><i class="collapse-chevron">▼</i></h2>
+    <h2><button class="move-btn" data-dir="up" type="button">▲</button><button class="move-btn" data-dir="down" type="button">▼</button><span class="h2-label">🥦 Fruits &amp; Vegetables</span><span class="cat-count" id="count-fruits-vegetables"></span><i class="collapse-chevron">▼</i></h2>
     <div class="category-body">
     <ul id="fruits-vegetables"></ul>
     <div class="add-row">
@@ -624,7 +649,7 @@
   </section>
 
   <section class="category" data-cat="others">
-    <h2><span class="h2-label">📦 Others</span><i class="collapse-chevron">▼</i></h2>
+    <h2><button class="move-btn" data-dir="up" type="button">▲</button><button class="move-btn" data-dir="down" type="button">▼</button><span class="h2-label">📦 Others</span><span class="cat-count" id="count-others"></span><i class="collapse-chevron">▼</i></h2>
     <div class="category-body">
     <ul id="others"></ul>
     <div class="add-row">
@@ -879,6 +904,8 @@ function showToast(msg) {
 // =================================================================
 function renderAll() {
   for (const id of CATEGORY_IDS) renderList(id);
+  // updateAllCounts is wired after wireAll() sets it up
+  if (typeof updateAllCounts === "function") updateAllCounts();
 }
 
 function renderList(listId) {
@@ -940,6 +967,8 @@ function renderList(listId) {
     li.append(span, crossBtn, delBtn, rmDefBtn);
     ul.appendChild(li);
   });
+
+  updateAllCounts();
 }
 
 function toggleCross(listId, idx) {
@@ -984,6 +1013,7 @@ function addDefault(listId, inputId) {
 // =================================================================
 // WIRE UP ALL BUTTONS
 // =================================================================
+let updateAllCounts = () => {}; // assigned inside wireAll after state is ready
 function wireAll() {
   // Add / Add-to-default buttons
   document.querySelectorAll("button[data-action][data-list][data-input]").forEach(btn => {
@@ -1068,24 +1098,108 @@ function wireAll() {
     switchToSession(genSessionId());
   });
 
-  // Collapse sections (local per device)
+  // Collapse + count + move sections (all local per device)
   const COLLAPSE_KEY = "shoppingList.v3.collapsed";
+  const ORDER_KEY    = "shoppingList.v3.order";
+
   const collapsedSet = new Set(JSON.parse(localStorage.getItem(COLLAPSE_KEY) || "[]"));
 
   function saveCollapsed() {
     localStorage.setItem(COLLAPSE_KEY, JSON.stringify([...collapsedSet]));
   }
 
+  // ── Section order ──────────────────────────────────────────────
+  function getSectionOrder() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(ORDER_KEY) || "null");
+      if (Array.isArray(saved) && saved.length === CATEGORY_IDS.length) return saved;
+    } catch (_) {}
+    return [...CATEGORY_IDS];
+  }
+
+  function saveOrder() {
+    const sections = [...document.querySelectorAll(".category[data-cat]")];
+    localStorage.setItem(ORDER_KEY, JSON.stringify(sections.map(s => s.dataset.cat)));
+  }
+
+  function applyOrder() {
+    const order = getSectionOrder();
+    const container = document.querySelector(".container");
+    const footer = document.querySelector(".footer");
+    order.forEach(catId => {
+      const el = document.querySelector(`.category[data-cat="${catId}"]`);
+      if (el) container.insertBefore(el, footer);
+    });
+  }
+
+  function updateMoveBtnStates() {
+    const sections = [...document.querySelectorAll(".category[data-cat]")];
+    sections.forEach((sec, i) => {
+      sec.querySelector('.move-btn[data-dir="up"]').disabled  = (i === 0);
+      sec.querySelector('.move-btn[data-dir="down"]').disabled = (i === sections.length - 1);
+    });
+  }
+
+  function updateCount(listId) {
+    const el = document.getElementById("count-" + listId);
+    if (!el) return;
+    const items = state?.[listId] || [];
+    const total = items.length;
+    const remaining = items.filter(it => !it.crossed).length;
+    if (total === 0) {
+      el.textContent = "";
+      el.className = "cat-count";
+      return;
+    }
+    el.textContent = `(${remaining}/${total})`;
+    el.className = "cat-count " + (remaining === 0 ? "all-done" : "has-remaining");
+  }
+
+  updateAllCounts = function() {
+    for (const id of CATEGORY_IDS) updateCount(id);
+  };
+
+  // ── Init order & collapse state ────────────────────────────────
+  applyOrder();
+
   document.querySelectorAll(".category[data-cat]").forEach(section => {
     const catId = section.dataset.cat;
     if (collapsedSet.has(catId)) section.classList.add("collapsed");
 
-    section.querySelector("h2").addEventListener("click", () => {
+    // Collapse toggle — only fires if not a move-btn click
+    section.querySelector("h2").addEventListener("click", e => {
+      if (e.target.closest(".move-btn")) return;
       const isNowCollapsed = section.classList.toggle("collapsed");
       isNowCollapsed ? collapsedSet.add(catId) : collapsedSet.delete(catId);
       saveCollapsed();
     });
+
+    // Move buttons
+    section.querySelectorAll(".move-btn").forEach(btn => {
+      btn.addEventListener("click", e => {
+        e.stopPropagation();
+        const dir = btn.dataset.dir;
+        const sections = [...document.querySelectorAll(".category[data-cat]")];
+        const idx = sections.indexOf(section);
+        const container = document.querySelector(".container");
+        const footer = document.querySelector(".footer");
+
+        if (dir === "up" && idx > 0) {
+          container.insertBefore(section, sections[idx - 1]);
+        } else if (dir === "down" && idx < sections.length - 1) {
+          // insertBefore the element after the next sibling
+          const after = sections[idx + 2];
+          after ? container.insertBefore(section, after) : container.insertBefore(section, footer);
+        }
+
+        saveOrder();
+        updateMoveBtnStates();
+      });
+    });
   });
+
+  updateMoveBtnStates();
+  updateAllCounts();
 }
 
 // =================================================================
