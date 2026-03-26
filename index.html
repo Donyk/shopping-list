@@ -7,17 +7,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#b8dce8" />
 
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <!-- Firebase v10 compat -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
   <style>
-    /* ── Variables ─────────────────────────────────────────────── */
     :root {
       --bg:          #c8e6f0;
       --bg2:         #b4d8e8;
@@ -39,7 +36,6 @@
       --transition:  0.15s ease;
     }
 
-    /* ── Reset & Base ───────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
@@ -59,436 +55,184 @@
       padding: 14px 0 32px;
     }
 
-    /* ── Session Banner ─────────────────────────────────────────── */
+    /* ── Session Banner ─── */
     .session-banner {
       background: rgba(255,255,255,0.45);
       backdrop-filter: blur(8px);
       border: 1px solid var(--card-border);
       border-radius: var(--radius);
       padding: 10px 12px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       display: flex;
       flex-direction: column;
       gap: 8px;
       box-shadow: var(--shadow);
     }
-
-    .session-top {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .session-left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex: 1;
-      min-width: 0;
-    }
+    .session-top { display: flex; align-items: center; gap: 8px; }
+    .session-left { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
 
     .sync-pill {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 3px 9px;
-      border-radius: 20px;
-      white-space: nowrap;
-      letter-spacing: 0.02em;
-      background: rgba(39,174,96,0.15);
-      color: #1a7a44;
+      display: flex; align-items: center; gap: 5px;
+      font-size: 0.75rem; font-weight: 600;
+      padding: 3px 9px; border-radius: 20px;
+      white-space: nowrap; letter-spacing: 0.02em;
+      background: rgba(39,174,96,0.15); color: #1a7a44;
       transition: background var(--transition), color var(--transition);
     }
-    .sync-pill.syncing {
-      background: rgba(230,126,34,0.15);
-      color: #a0520f;
-    }
-    .sync-pill.offline {
-      background: rgba(192,57,43,0.12);
-      color: var(--danger);
-    }
-
-    .sync-dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--green);
-      flex-shrink: 0;
-    }
-    .sync-pill.syncing .sync-dot {
-      background: var(--orange);
-      animation: pulse 1s infinite;
-    }
+    .sync-pill.syncing { background: rgba(230,126,34,0.15); color: #a0520f; }
+    .sync-pill.offline { background: rgba(192,57,43,0.12); color: var(--danger); }
+    .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+    .sync-pill.syncing .sync-dot { background: var(--orange); animation: pulse 1s infinite; }
     .sync-pill.offline .sync-dot { background: var(--danger); }
-
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.25} }
 
-    .session-label {
-      color: var(--muted);
-      font-size: 0.82rem;
-      font-weight: 500;
-    }
-
+    .session-label { color: var(--muted); font-size: 0.82rem; font-weight: 500; }
     .session-code {
-      font-family: 'Courier New', monospace;
-      font-size: 1.05rem;
-      font-weight: 700;
-      letter-spacing: 3px;
-      background: rgba(255,255,255,0.65);
-      border: 1px solid rgba(255,255,255,0.9);
-      padding: 2px 10px;
-      border-radius: 7px;
-      color: var(--text);
+      font-family: 'Courier New', monospace; font-size: 1.05rem; font-weight: 700;
+      letter-spacing: 3px; background: rgba(255,255,255,0.65);
+      border: 1px solid rgba(255,255,255,0.9); padding: 2px 10px;
+      border-radius: 7px; color: var(--text);
     }
+    .session-actions { display: flex; gap: 6px; }
+    .session-actions .btn { flex: 1; text-align: center; font-size: 0.82rem; padding: 7px 8px; }
 
-    .session-actions {
-      display: flex;
-      gap: 6px;
-    }
-    .session-actions .btn {
-      flex: 1;
-      text-align: center;
-      font-size: 0.82rem;
-      padding: 7px 8px;
-    }
-
-    /* ── Collapse & Move ────────────────────────────────────────── */
-    .category h2 {
+    /* ── Language Bar ─── */
+    .lang-bar {
       display: flex;
       align-items: center;
-      cursor: pointer;
-      user-select: none;
       gap: 5px;
+      margin-bottom: 12px;
+      padding: 7px 11px;
+      background: rgba(255,255,255,0.45);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
     }
-    .category h2 .h2-label { flex: 1; }
-
-    .move-btn {
-      flex-shrink: 0;
-      background: none;
-      border: none;
-      padding: 2px 4px;
-      font-size: 0.7rem;
-      opacity: 0.28;
-      line-height: 1;
+    .lang-bar-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-right: 3px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .lang-btn {
+      padding: 4px 11px;
+      border-radius: 7px;
+      border: 1.5px solid transparent;
+      background: transparent;
+      font-family: var(--font);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--muted);
       cursor: pointer;
-      border-radius: 4px;
+      transition: all 0.15s ease;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .lang-btn:hover { background: rgba(255,255,255,0.65); color: var(--text); }
+    .lang-btn.active {
+      background: rgba(255,255,255,0.88);
+      color: var(--text);
+      border-color: rgba(255,255,255,0.92);
+      box-shadow: 0 1px 5px rgba(0,80,120,0.12);
+    }
+    .lang-flag { font-size: 1rem; line-height: 1; }
+
+    /* ── Collapse & Move ─── */
+    .category h2 { display: flex; align-items: center; cursor: pointer; user-select: none; gap: 5px; }
+    .category h2 .h2-label { flex: 1; }
+    .move-btn {
+      flex-shrink: 0; background: none; border: none;
+      padding: 2px 4px; font-size: 0.7rem; opacity: 0.28;
+      line-height: 1; cursor: pointer; border-radius: 4px;
       transition: opacity var(--transition), background var(--transition);
     }
     .move-btn:hover { opacity: 0.75; background: rgba(0,0,0,0.06); }
     .move-btn:disabled { opacity: 0.1; cursor: default; }
 
-    .cat-count {
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--muted);
-      opacity: 0;
-      transition: opacity 0.18s ease;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
+    .cat-count { font-size: 0.75rem; font-weight: 600; color: var(--muted); opacity: 0; transition: opacity 0.18s ease; white-space: nowrap; flex-shrink: 0; }
     .cat-count.has-remaining { color: var(--orange); }
     .cat-count.all-done { color: var(--green); }
     .category.collapsed .cat-count { opacity: 1; }
 
-    .collapse-chevron {
-      font-style: normal;
-      font-size: 0.72rem;
-      opacity: 0.35;
-      transition: transform 0.22s ease;
-      flex-shrink: 0;
-    }
+    .collapse-chevron { font-style: normal; font-size: 0.72rem; opacity: 0.35; transition: transform 0.22s ease; flex-shrink: 0; }
     .category.collapsed .collapse-chevron { transform: rotate(-90deg); }
 
-    .category-body {
-      overflow: hidden;
-      transition: max-height 0.28s ease, opacity 0.22s ease;
-      max-height: 1200px;
-      opacity: 1;
-    }
+    .category-body { overflow: hidden; transition: max-height 0.28s ease, opacity 0.22s ease; max-height: 1200px; opacity: 1; }
     .category.collapsed .category-body { max-height: 0; opacity: 0; }
 
-    /* ── Buttons ───────────────────────────────────────────────── */
-    button {
-      font-family: var(--font);
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all var(--transition);
-      border: none;
-      outline: none;
-    }
-
-    .btn {
-      background: var(--btn);
-      color: var(--text);
-      padding: 8px 13px;
-      border-radius: var(--radius-sm);
-      border: 1px solid rgba(255,255,255,0.8);
-      box-shadow: 0 1px 4px rgba(0,80,120,0.08);
-    }
-    .btn:hover {
-      background: var(--btn-hover);
-      box-shadow: 0 2px 8px rgba(0,80,120,0.12);
-      transform: translateY(-1px);
-    }
+    /* ── Buttons ─── */
+    button { font-family: var(--font); font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all var(--transition); border: none; outline: none; }
+    .btn { background: var(--btn); color: var(--text); padding: 8px 13px; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.8); box-shadow: 0 1px 4px rgba(0,80,120,0.08); }
+    .btn:hover { background: var(--btn-hover); box-shadow: 0 2px 8px rgba(0,80,120,0.12); transform: translateY(-1px); }
     .btn:active { transform: translateY(0); }
-
-    .btn.danger {
-      background: var(--danger);
-      color: #fff;
-      border-color: transparent;
-    }
+    .btn.danger { background: var(--danger); color: #fff; border-color: transparent; }
     .btn.danger:hover { background: #a93226; }
-
     .btn.icon { font-size: 0.9rem; padding: 7px 11px; }
 
-    /* ── Header ─────────────────────────────────────────────────── */
-    .header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
-
-    .header h1 {
-      font-size: 1.75rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      flex: 1;
-      color: var(--text);
-    }
-
+    /* ── Header ─── */
+    .header { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+    .header h1 { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.02em; flex: 1; color: var(--text); }
     .header-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
-    /* ── Category Card ──────────────────────────────────────────── */
+    /* ── Category Card ─── */
     .category {
-      background: var(--card);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius);
-      padding: 12px 14px 14px;
-      margin: 10px 0;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(4px);
+      background: var(--card); border: 1px solid var(--card-border);
+      border-radius: var(--radius); padding: 12px 14px 14px;
+      margin: 10px 0; box-shadow: var(--shadow); backdrop-filter: blur(4px);
     }
+    .category h2 { font-size: 1rem; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 8px; color: var(--text); }
 
-    .category h2 {
-      font-size: 1rem;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      margin-bottom: 8px;
-      color: var(--text);
-      /* collapse behaviour set above */
-    }
-
-    /* ── List ───────────────────────────────────────────────────── */
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 8px;
-    }
-
-    li {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      padding: 5px 0;
-      border-bottom: 1px solid rgba(0,0,0,0.04);
-      animation: fadeIn 0.18s ease;
-    }
+    /* ── List ─── */
+    ul { list-style: none; padding: 0; margin: 0 0 8px; }
+    li { display: flex; align-items: center; gap: 7px; padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); animation: fadeIn 0.18s ease; }
     li:last-child { border-bottom: none; }
-
     @keyframes fadeIn { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:none} }
 
-    .item-text {
-      flex: 1;
-      font-size: 0.95rem;
-      font-weight: 500;
-      cursor: pointer;
-      user-select: none;
-      transition: opacity var(--transition);
-      line-height: 1.35;
-      padding: 2px 0;
-    }
+    .item-text { flex: 1; font-size: 0.95rem; font-weight: 500; cursor: pointer; user-select: none; transition: opacity var(--transition); line-height: 1.35; padding: 2px 0; }
     .item-text:hover { opacity: 0.7; }
-    .item-text.crossed {
-      text-decoration: line-through;
-      opacity: 0.38;
-      font-weight: 400;
-    }
+    .item-text.crossed { text-decoration: line-through; opacity: 0.38; font-weight: 400; }
 
-    .item-btn {
-      flex-shrink: 0;
-      padding: 4px 9px;
-      border-radius: 7px;
-      background: rgba(255,255,255,0.75);
-      border: 1px solid rgba(255,255,255,0.9);
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--text);
-    }
-    .item-btn:hover {
-      background: rgba(255,255,255,0.97);
-      transform: translateY(-1px);
-    }
-    .item-btn.rm-default {
-      color: var(--muted);
-    }
-    .item-btn.rm-default:disabled {
-      opacity: 0.25;
-      cursor: not-allowed;
-      transform: none;
-    }
+    .item-btn { flex-shrink: 0; padding: 4px 9px; border-radius: 7px; background: rgba(255,255,255,0.75); border: 1px solid rgba(255,255,255,0.9); font-size: 0.78rem; font-weight: 600; color: var(--text); }
+    .item-btn:hover { background: rgba(255,255,255,0.97); transform: translateY(-1px); }
+    .item-btn.rm-default { color: var(--muted); }
+    .item-btn.rm-default:disabled { opacity: 0.25; cursor: not-allowed; transform: none; }
 
-    /* ── Add Row ────────────────────────────────────────────────── */
-    .add-row {
-      display: flex;
-      gap: 7px;
-      margin-top: 8px;
-    }
-
-    .add-row input {
-      flex: 1;
-      padding: 9px 12px;
-      border-radius: var(--radius-sm);
-      border: 1.5px solid rgba(255,255,255,0.8);
-      background: rgba(255,255,255,0.75);
-      font-family: var(--font);
-      font-size: 0.9rem;
-      color: var(--text);
-      outline: none;
-      transition: border-color var(--transition), box-shadow var(--transition);
-    }
-    .add-row input:focus {
-      border-color: rgba(100,160,210,0.6);
-      box-shadow: 0 0 0 3px rgba(100,160,210,0.15);
-      background: rgba(255,255,255,0.92);
-    }
+    /* ── Add Row ─── */
+    .add-row { display: flex; gap: 7px; margin-top: 8px; }
+    .add-row input { flex: 1; padding: 9px 12px; border-radius: var(--radius-sm); border: 1.5px solid rgba(255,255,255,0.8); background: rgba(255,255,255,0.75); font-family: var(--font); font-size: 0.9rem; color: var(--text); outline: none; transition: border-color var(--transition), box-shadow var(--transition); }
+    .add-row input:focus { border-color: rgba(100,160,210,0.6); box-shadow: 0 0 0 3px rgba(100,160,210,0.15); background: rgba(255,255,255,0.92); }
     .add-row input::placeholder { color: var(--muted); }
+    .add-row button { padding: 9px 12px; border-radius: var(--radius-sm); background: rgba(255,255,255,0.78); border: 1px solid rgba(255,255,255,0.85); font-size: 0.82rem; white-space: nowrap; color: var(--text); }
+    .add-row button:hover { background: rgba(255,255,255,0.97); transform: translateY(-1px); }
 
-    .add-row button {
-      padding: 9px 12px;
-      border-radius: var(--radius-sm);
-      background: rgba(255,255,255,0.78);
-      border: 1px solid rgba(255,255,255,0.85);
-      font-size: 0.82rem;
-      white-space: nowrap;
-      color: var(--text);
-    }
-    .add-row button:hover {
-      background: rgba(255,255,255,0.97);
-      transform: translateY(-1px);
-    }
-
-    /* ── Modal ──────────────────────────────────────────────────── */
-    .overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(10,30,45,0.45);
-      backdrop-filter: blur(3px);
-      z-index: 200;
-      align-items: center;
-      justify-content: center;
-    }
+    /* ── Modal ─── */
+    .overlay { display: none; position: fixed; inset: 0; background: rgba(10,30,45,0.45); backdrop-filter: blur(3px); z-index: 200; align-items: center; justify-content: center; }
     .overlay.active { display: flex; }
-
-    .modal {
-      background: #fff;
-      border-radius: var(--radius);
-      padding: 28px 24px 24px;
-      width: 92%;
-      max-width: 360px;
-      box-shadow: var(--shadow-md);
-      animation: slideUp 0.2s ease;
-    }
+    .modal { background: #fff; border-radius: var(--radius); padding: 28px 24px 24px; width: 92%; max-width: 360px; box-shadow: var(--shadow-md); animation: slideUp 0.2s ease; }
     @keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:none} }
-
-    .modal h3 {
-      font-size: 1.15rem;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-    .modal p {
-      font-size: 0.85rem;
-      color: #666;
-      margin-bottom: 16px;
-      line-height: 1.5;
-    }
-
-    .modal input {
-      width: 100%;
-      padding: 12px;
-      border: 2px solid #dde8f0;
-      border-radius: var(--radius-sm);
-      font-family: 'Courier New', monospace;
-      font-size: 1.4rem;
-      letter-spacing: 5px;
-      text-transform: uppercase;
-      text-align: center;
-      outline: none;
-      margin-bottom: 16px;
-      transition: border-color var(--transition);
-    }
+    .modal h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 6px; }
+    .modal p { font-size: 0.85rem; color: #666; margin-bottom: 16px; line-height: 1.5; }
+    .modal input { width: 100%; padding: 12px; border: 2px solid #dde8f0; border-radius: var(--radius-sm); font-family: 'Courier New', monospace; font-size: 1.4rem; letter-spacing: 5px; text-transform: uppercase; text-align: center; outline: none; margin-bottom: 16px; transition: border-color var(--transition); }
     .modal input:focus { border-color: var(--bg2); }
-
-    .modal-btns {
-      display: flex;
-      gap: 10px;
-    }
-    .modal-btns button {
-      flex: 1;
-      padding: 11px;
-      border-radius: var(--radius-sm);
-      font-size: 0.9rem;
-      border: none;
-    }
-    .modal-btns .m-primary {
-      background: var(--bg2);
-      color: var(--text);
-      font-weight: 700;
-    }
+    .modal-btns { display: flex; gap: 10px; }
+    .modal-btns button { flex: 1; padding: 11px; border-radius: var(--radius-sm); font-size: 0.9rem; border: none; }
+    .modal-btns .m-primary { background: var(--bg2); color: var(--text); font-weight: 700; }
     .modal-btns .m-primary:hover { background: #9dcfe4; }
-    .modal-btns .m-secondary {
-      background: #eef0f2;
-      color: #555;
-      font-weight: 600;
-    }
+    .modal-btns .m-secondary { background: #eef0f2; color: #555; font-weight: 600; }
     .modal-btns .m-secondary:hover { background: #e2e5e8; }
 
-    /* ── Toast ──────────────────────────────────────────────────── */
-    .toast {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%) translateY(0);
-      background: rgba(28,43,53,0.92);
-      color: #fff;
-      padding: 10px 20px;
-      border-radius: 30px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.2s, transform 0.2s;
-      z-index: 300;
-      white-space: nowrap;
-    }
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(-4px);
-    }
+    /* ── Toast ─── */
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(0); background: rgba(28,43,53,0.92); color: #fff; padding: 10px 20px; border-radius: 30px; font-size: 0.88rem; font-weight: 600; pointer-events: none; opacity: 0; transition: opacity 0.2s, transform 0.2s; z-index: 300; white-space: nowrap; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(-4px); }
 
-    /* ── Footer ─────────────────────────────────────────────────── */
-    .footer {
-      margin-top: 20px;
-      text-align: center;
-      font-size: 0.78rem;
-      color: var(--muted);
-    }
+    /* ── Footer ─── */
+    .footer { margin-top: 20px; text-align: center; font-size: 0.78rem; color: var(--muted); }
 
-    /* ── Responsive ─────────────────────────────────────────────── */
     @media (max-width: 560px) {
       .header h1 { font-size: 1.4rem; }
       .add-row { flex-wrap: wrap; }
@@ -499,7 +243,7 @@
 <body>
 <div class="container">
 
-  <!-- ── Session Banner ──────────────────────────────────────── -->
+  <!-- Session Banner -->
   <div class="session-banner">
     <div class="session-top">
       <div class="session-left">
@@ -518,7 +262,16 @@
     </div>
   </div>
 
-  <!-- ── Join Modal ──────────────────────────────────────────── -->
+  <!-- Language Bar -->
+  <div class="lang-bar">
+    <span class="lang-bar-label">🌐 Lang</span>
+    <button class="lang-btn" data-lang="en" type="button"><span class="lang-flag">🇬🇧</span> EN</button>
+    <button class="lang-btn" data-lang="fr" type="button"><span class="lang-flag">🇫🇷</span> FR</button>
+    <button class="lang-btn" data-lang="de" type="button"><span class="lang-flag">🇩🇪</span> DE</button>
+    <button class="lang-btn" data-lang="es" type="button"><span class="lang-flag">🇪🇸</span> ES</button>
+  </div>
+
+  <!-- Join Modal -->
   <div class="overlay" id="join-overlay">
     <div class="modal">
       <h3>Join a session</h3>
@@ -531,7 +284,7 @@
     </div>
   </div>
 
-  <!-- ── Header ──────────────────────────────────────────────── -->
+  <!-- Header -->
   <header class="header">
     <h1>🛒 Shopping List</h1>
     <div class="header-actions">
@@ -540,9 +293,9 @@
     </div>
   </header>
 
-  <!-- ── Categories ──────────────────────────────────────────── -->
+  <!-- Categories -->
   <section class="category" data-cat="dairy-products">
-    <h2><button class="move-btn" data-dir="up" type="button">▲</button><button class="move-btn" data-dir="down" type="button">▼</button><span class="h2-label">🥛 Dairy Products</span><span class="cat-count" id="count-dairy-products"></span><i class="collapse-chevron">▼</i></h2>
+    <h2><button class="move-btn" data-dir="up" type="button">▲</button><button class="move-btn" data-dir="down" type="button">▼</button><span class="h2-label" data-i18n-cat="dairy-products">🥛 Dairy Products</span><span class="cat-count" id="count-dairy-products"></span><i class="collapse-chevron">▼</i></h2>
     <div class="category-body">
     <ul id="dairy-products"></ul>
     <div class="add-row">
@@ -554,7 +307,7 @@
   </section>
 
   <section class="category" data-cat="bakery-grains">
-    <h2><button class="move-btn" data-dir="up" type="button">▲</button><button class="move-btn" data-dir="down" type="button">▼</button><span class="h2-label">🍞 Bakery &amp; Grains</span><span class="cat-count" id="count-bakery-grains"></span><i class="collapse-chevron">▼</i></h2>
+    <h2><button class="move-btn" data-dir="up" type="button">▲</button><button class="move-btn" data-dir="down" type="button">▼</button><span class="h2-label" data-i18n-cat="bakery-grains">🍞 Bakery &amp; Grains</span><span class="cat-count" id="count-bakery-grains"></span><i class="collapse-chevron">▼</i></h2>
     <div class="category-body">
     <ul id="bakery-grains"></ul>
     <div class="add-row">
@@ -566,7 +319,7 @@
   </section>
 
   <section class="category" data-cat="pantry-staples">
-    <h2><button class="move-btn" data-dir="up" type="button">▲</button><button class="move-btn" data-dir="down" type="button">▼</button><span class="h2-label">🫙 Pantry Staples</span><span class="cat-count" id="count-pantry-staples"></span><i class="collapse-chevron">▼</i></h2>
+    <h2><button class="move-btn" data-dir="up" type="button">▲</button><button class="move-btn" data-dir="down" type="button">▼</button><span class="h2-label" data-i18n-cat="pantry-staples">🫙 Pantry Staples</span><span class="cat-count" id="count-pantry-staples"></span><i class="collapse-chevron">▼</i></h2>
     <div class="category-body">
     <ul id="pantry-staples"></ul>
     <div class="add-row">
@@ -578,7 +331,7 @@
   </section>
 
   <section class="category" data-cat="breakfast">
-    <h2><button class="move-btn" data-dir="up" type="button">▲</button><button class="move-btn" data-dir="down" type="button">▼</button><span class="h2-label">☕ Breakfast</span><span class="cat-count" id="count-breakfast"></span><i class="collapse-chevron">▼</i></h2>
+    <h2><button class="move-btn" data-dir="up" type="button">▲</button><button class="move-btn" data-dir="down" type="button">▼</button><span class="h2-label" data-i18n-cat="breakfast">☕ Breakfast</span><span class="cat-count" id="count-breakfast"></span><i class="collapse-chevron">▼</i></h2>
     <div class="category-body">
     <ul id="breakfast"></ul>
     <div class="add-row">
@@ -590,7 +343,7 @@
   </section>
 
   <section class="category" data-cat="personal-care">
-    <h2><button class="move-btn" data-dir="up" type="button">▲</button><button class="move-btn" data-dir="down" type="button">▼</button><span class="h2-label">🧴 Personal Care</span><span class="cat-count" id="count-personal-care"></span><i class="collapse-chevron">▼</i></h2>
+    <h2><button class="move-btn" data-dir="up" type="button">▲</button><button class="move-btn" data-dir="down" type="button">▼</button><span class="h2-label" data-i18n-cat="personal-care">🧴 Personal Care</span><span class="cat-count" id="count-personal-care"></span><i class="collapse-chevron">▼</i></h2>
     <div class="category-body">
     <ul id="personal-care"></ul>
     <div class="add-row">
@@ -602,7 +355,7 @@
   </section>
 
   <section class="category" data-cat="cleaning-supplies">
-    <h2><button class="move-btn" data-dir="up" type="button">▲</button><button class="move-btn" data-dir="down" type="button">▼</button><span class="h2-label">🧹 Cleaning Supplies</span><span class="cat-count" id="count-cleaning-supplies"></span><i class="collapse-chevron">▼</i></h2>
+    <h2><button class="move-btn" data-dir="up" type="button">▲</button><button class="move-btn" data-dir="down" type="button">▼</button><span class="h2-label" data-i18n-cat="cleaning-supplies">🧹 Cleaning Supplies</span><span class="cat-count" id="count-cleaning-supplies"></span><i class="collapse-chevron">▼</i></h2>
     <div class="category-body">
     <ul id="cleaning-supplies"></ul>
     <div class="add-row">
@@ -614,7 +367,7 @@
   </section>
 
   <section class="category" data-cat="household-items">
-    <h2><button class="move-btn" data-dir="up" type="button">▲</button><button class="move-btn" data-dir="down" type="button">▼</button><span class="h2-label">🏠 Household Items</span><span class="cat-count" id="count-household-items"></span><i class="collapse-chevron">▼</i></h2>
+    <h2><button class="move-btn" data-dir="up" type="button">▲</button><button class="move-btn" data-dir="down" type="button">▼</button><span class="h2-label" data-i18n-cat="household-items">🏠 Household Items</span><span class="cat-count" id="count-household-items"></span><i class="collapse-chevron">▼</i></h2>
     <div class="category-body">
     <ul id="household-items"></ul>
     <div class="add-row">
@@ -626,7 +379,7 @@
   </section>
 
   <section class="category" data-cat="snacks">
-    <h2><button class="move-btn" data-dir="up" type="button">▲</button><button class="move-btn" data-dir="down" type="button">▼</button><span class="h2-label">🍫 Snacks</span><span class="cat-count" id="count-snacks"></span><i class="collapse-chevron">▼</i></h2>
+    <h2><button class="move-btn" data-dir="up" type="button">▲</button><button class="move-btn" data-dir="down" type="button">▼</button><span class="h2-label" data-i18n-cat="snacks">🍫 Snacks</span><span class="cat-count" id="count-snacks"></span><i class="collapse-chevron">▼</i></h2>
     <div class="category-body">
     <ul id="snacks"></ul>
     <div class="add-row">
@@ -638,7 +391,7 @@
   </section>
 
   <section class="category" data-cat="fruits-vegetables">
-    <h2><button class="move-btn" data-dir="up" type="button">▲</button><button class="move-btn" data-dir="down" type="button">▼</button><span class="h2-label">🥦 Fruits &amp; Vegetables</span><span class="cat-count" id="count-fruits-vegetables"></span><i class="collapse-chevron">▼</i></h2>
+    <h2><button class="move-btn" data-dir="up" type="button">▲</button><button class="move-btn" data-dir="down" type="button">▼</button><span class="h2-label" data-i18n-cat="fruits-vegetables">🥦 Fruits &amp; Vegetables</span><span class="cat-count" id="count-fruits-vegetables"></span><i class="collapse-chevron">▼</i></h2>
     <div class="category-body">
     <ul id="fruits-vegetables"></ul>
     <div class="add-row">
@@ -650,7 +403,7 @@
   </section>
 
   <section class="category" data-cat="others">
-    <h2><button class="move-btn" data-dir="up" type="button">▲</button><button class="move-btn" data-dir="down" type="button">▼</button><span class="h2-label">📦 Others</span><span class="cat-count" id="count-others"></span><i class="collapse-chevron">▼</i></h2>
+    <h2><button class="move-btn" data-dir="up" type="button">▲</button><button class="move-btn" data-dir="down" type="button">▼</button><span class="h2-label" data-i18n-cat="others">📦 Others</span><span class="cat-count" id="count-others"></span><i class="collapse-chevron">▼</i></h2>
     <div class="category-body">
     <ul id="others"></ul>
     <div class="add-row">
@@ -666,25 +419,12 @@
   </footer>
 </div>
 
-<!-- ── Toast ──────────────────────────────────────────────────── -->
 <div class="toast" id="toast"></div>
 
 <script>
-// =================================================================
+// ================================================================
 // FIREBASE CONFIG
-// Replace these values with your own Firebase project credentials.
-// Firebase Console → Project Settings → Your Apps → Web App config
-//
-// Also set Firestore security rules to:
-//   rules_version = '2';
-//   service cloud.firestore {
-//     match /databases/{database}/documents {
-//       match /sessions/{sessionId} {
-//         allow read, write: if true;
-//       }
-//     }
-//   }
-// =================================================================
+// ================================================================
 const FIREBASE_CONFIG = {
   apiKey:            "AIzaSyBDRenu_QaBzdqNkC9b7ZD2EuLgeyRyaM0",
   authDomain:        "shopping-list-342c9.firebaseapp.com",
@@ -693,11 +433,167 @@ const FIREBASE_CONFIG = {
   messagingSenderId: "1038982681349",
   appId:             "1:1038982681349:web:3aeb7644ed49ae86921d6c"
 };
-// =================================================================
 
-// =================================================================
-// DEFAULTS
-// =================================================================
+// ================================================================
+// I18N — Category labels and default item translations
+// ================================================================
+const I18N = {
+  categories: {
+    "dairy-products":    { en: "🥛 Dairy Products",     fr: "🥛 Produits laitiers",      de: "🥛 Milchprodukte",         es: "🥛 Productos lácteos" },
+    "bakery-grains":     { en: "🍞 Bakery & Grains",     fr: "🍞 Boulangerie & Céréales",  de: "🍞 Backwaren & Getreide",   es: "🍞 Panadería & Granos" },
+    "pantry-staples":    { en: "🫙 Pantry Staples",      fr: "🫙 Épicerie de base",         de: "🫙 Vorratskammer",           es: "🫙 Despensa" },
+    "breakfast":         { en: "☕ Breakfast",            fr: "☕ Petit-déjeuner",           de: "☕ Frühstück",               es: "☕ Desayuno" },
+    "personal-care":     { en: "🧴 Personal Care",       fr: "🧴 Hygiène & Soins",          de: "🧴 Körperpflege",            es: "🧴 Cuidado personal" },
+    "cleaning-supplies": { en: "🧹 Cleaning Supplies",   fr: "🧹 Produits ménagers",        de: "🧹 Reinigungsmittel",        es: "🧹 Limpieza" },
+    "household-items":   { en: "🏠 Household Items",     fr: "🏠 Articles ménagers",        de: "🏠 Haushaltswaren",          es: "🏠 Artículos del hogar" },
+    "snacks":            { en: "🍫 Snacks",              fr: "🍫 Snacks",                   de: "🍫 Snacks",                  es: "🍫 Aperitivos" },
+    "fruits-vegetables": { en: "🥦 Fruits & Vegetables", fr: "🥦 Fruits & Légumes",         de: "🥦 Obst & Gemüse",           es: "🥦 Frutas & Verduras" },
+    "others":            { en: "📦 Others",              fr: "📦 Autres",                   de: "📦 Sonstiges",               es: "📦 Otros" }
+  },
+
+  // Each item key → translations in all 4 langs
+  items: {
+    // dairy-products
+    "butter":              { en: "Butter",                    fr: "Beurre",                     de: "Butter",                    es: "Mantequilla" },
+    "milk":                { en: "Milk",                      fr: "Lait",                       de: "Milch",                     es: "Leche" },
+    "cheese":              { en: "Cheese",                    fr: "Fromage",                    de: "Käse",                      es: "Queso" },
+    "yogurt":              { en: "Yogurt",                    fr: "Yaourt",                     de: "Joghurt",                   es: "Yogur" },
+    // bakery-grains
+    "bread":               { en: "Bread",                     fr: "Pain",                       de: "Brot",                      es: "Pan" },
+    "pasta":               { en: "Pasta",                     fr: "Pâtes",                      de: "Nudeln",                    es: "Pasta" },
+    "rice":                { en: "Rice",                      fr: "Riz",                        de: "Reis",                      es: "Arroz" },
+    // pantry-staples
+    "olive-oil":           { en: "Olive Oil",                 fr: "Huile d'olive",              de: "Olivenöl",                  es: "Aceite de oliva" },
+    "salt":                { en: "Salt",                      fr: "Sel",                        de: "Salz",                      es: "Sal" },
+    "sugar":               { en: "Sugar",                     fr: "Sucre",                      de: "Zucker",                    es: "Azúcar" },
+    "flour":               { en: "Flour",                     fr: "Farine",                     de: "Mehl",                      es: "Harina" },
+    "baking-powder":       { en: "Baking Powder",             fr: "Levure chimique",            de: "Backpulver",                es: "Levadura en polvo" },
+    "vinegar":             { en: "Vinegar",                   fr: "Vinaigre",                   de: "Essig",                     es: "Vinagre" },
+    "canned-beans":        { en: "Canned Beans",              fr: "Haricots en boîte",          de: "Dosenbohnen",               es: "Alubias en lata" },
+    "canned-tomatoes":     { en: "Canned Tomatoes",           fr: "Tomates en boîte",           de: "Dosentomaten",              es: "Tomates en lata" },
+    "spices":              { en: "Spices",                    fr: "Épices",                     de: "Gewürze",                   es: "Especias" },
+    "condiments":          { en: "Condiments",                fr: "Condiments",                 de: "Soßen & Gewürze",           es: "Condimentos" },
+    // breakfast
+    "coffee-beans":        { en: "Coffee beans",              fr: "Café en grains",             de: "Kaffeebohnen",              es: "Granos de café" },
+    "tea":                 { en: "Tea",                       fr: "Thé",                        de: "Tee",                       es: "Té" },
+    "muesli":              { en: "Muesli",                    fr: "Muesli",                     de: "Müsli",                     es: "Muesli" },
+    "jam":                 { en: "Jam",                       fr: "Confiture",                  de: "Marmelade",                 es: "Mermelada" },
+    // personal-care
+    "toilet-paper":        { en: "Toilet Paper",              fr: "Papier toilette",            de: "Toilettenpapier",           es: "Papel higiénico" },
+    "hand-soap":           { en: "Hand Soap",                 fr: "Savon pour les mains",       de: "Handseife",                 es: "Jabón de manos" },
+    "body-soap":           { en: "Body Soap",                 fr: "Gel douche",                 de: "Duschgel",                  es: "Jabón corporal" },
+    "shampoo":             { en: "Shampoo",                   fr: "Shampoing",                  de: "Shampoo",                   es: "Champú" },
+    "q-tips":              { en: "Q-Tips",                    fr: "Cotons-tiges",               de: "Wattestäbchen",             es: "Bastoncillos" },
+    "deodorant":           { en: "Deodorant",                 fr: "Déodorant",                  de: "Deodorant",                 es: "Desodorante" },
+    "toothpaste":          { en: "Toothpaste",                fr: "Dentifrice",                 de: "Zahnpasta",                 es: "Pasta de dientes" },
+    "toothbrush":          { en: "Toothbrush",                fr: "Brosse à dents",             de: "Zahnbürste",                es: "Cepillo de dientes" },
+    // cleaning-supplies
+    "laundry-detergent":   { en: "Laundry Detergent",         fr: "Lessive",                    de: "Waschmittel",               es: "Detergente para ropa" },
+    "dishwasher-tabs":     { en: "Dishwasher Tabs",           fr: "Pastilles lave-vaisselle",   de: "Spülmaschinentabs",         es: "Pastillas lavavajillas" },
+    "cleaning-product":    { en: "Cleaning Supplies",         fr: "Produits ménagers",          de: "Reiniger",                  es: "Productos de limpieza" },
+    "dish-soap":           { en: "Dish Soap",                 fr: "Liquide vaisselle",          de: "Spülmittel",                es: "Lavavajillas" },
+    "sponges":             { en: "Sponges",                   fr: "Éponges",                    de: "Schwämme",                  es: "Esponjas" },
+    "toilet-freshener":    { en: "Toilet flush freshener",    fr: "Bloc WC",                    de: "WC-Stein",                  es: "Pastilla WC" },
+    // household-items
+    "trash-bags":          { en: "Trash Bags",                fr: "Sacs poubelle",              de: "Müllbeutel",                es: "Bolsas de basura" },
+    "kitchen-roll":        { en: "Kitchen Roll",              fr: "Essuie-tout",                de: "Küchenrolle",               es: "Papel de cocina" },
+    "aluminum-foil":       { en: "Aluminum Foil",             fr: "Papier aluminium",           de: "Alufolie",                  es: "Papel de aluminio" },
+    "baking-paper":        { en: "Baking Paper",              fr: "Papier cuisson",             de: "Backpapier",                es: "Papel de horno" },
+    // snacks
+    "nuts":                { en: "Almonds, walnuts…",         fr: "Amandes, noix…",             de: "Mandeln, Nüsse…",           es: "Almendras, nueces…" },
+    "snack-general":       { en: "Snacks",                    fr: "Snacks",                     de: "Snacks",                    es: "Aperitivos" },
+    // fruits-vegetables
+    "avocado":             { en: "Avocadoes",                 fr: "Avocats",                    de: "Avocados",                  es: "Aguacates" },
+    // others
+    "batteries":           { en: "Batteries",                 fr: "Piles",                      de: "Batterien",                 es: "Pilas" }
+  },
+
+  // Which item keys belong to each category (defines the default list)
+  defaults: {
+    "dairy-products":    ["butter","milk","cheese","yogurt"],
+    "bakery-grains":     ["bread","pasta","rice"],
+    "pantry-staples":    ["olive-oil","salt","sugar","flour","baking-powder","vinegar","canned-beans","canned-tomatoes","spices","condiments"],
+    "breakfast":         ["coffee-beans","tea","muesli","jam"],
+    "personal-care":     ["toilet-paper","hand-soap","body-soap","shampoo","q-tips","deodorant","toothpaste","toothbrush"],
+    "cleaning-supplies": ["laundry-detergent","dishwasher-tabs","cleaning-product","dish-soap","sponges","toilet-freshener"],
+    "household-items":   ["trash-bags","kitchen-roll","aluminum-foil","baking-paper"],
+    "snacks":            ["nuts","snack-general"],
+    "fruits-vegetables": ["avocado"],
+    "others":            ["batteries"]
+  }
+};
+
+// ================================================================
+// LANGUAGE SYSTEM
+// ================================================================
+const LANG_KEY = "shoppingList.v3.lang";
+let currentLang = localStorage.getItem(LANG_KEY) || "en";
+
+// Build reverse lookup: norm(text in ANY language) → item key
+let reverseItemLookup = {};
+function buildReverseLookup() {
+  reverseItemLookup = {};
+  for (const [key, translations] of Object.entries(I18N.items)) {
+    for (const text of Object.values(translations)) {
+      reverseItemLookup[norm(text)] = key;
+    }
+  }
+}
+
+// Translate a stored text to the current language.
+// If the text matches any known translation (in any language), return current-lang version.
+// Otherwise return the original text unchanged (manually entered custom item).
+function translateItemText(text) {
+  const key = reverseItemLookup[norm(text)];
+  if (key && I18N.items[key]?.[currentLang]) {
+    return I18N.items[key][currentLang];
+  }
+  return text;
+}
+
+// Returns the canonical English text for a displayText (used for template storage)
+function toCanonical(text) {
+  const key = reverseItemLookup[norm(text)];
+  if (key && I18N.items[key]?.en) return I18N.items[key].en;
+  return text;
+}
+
+// Apply current lang labels to category headings
+function applyLangToCategories() {
+  document.querySelectorAll("[data-i18n-cat]").forEach(el => {
+    const catId = el.dataset.i18nCat;
+    const label = I18N.categories[catId]?.[currentLang];
+    if (label) el.textContent = label;
+  });
+}
+
+// Update active state of lang buttons
+function applyLangToButtons() {
+  document.querySelectorAll(".lang-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.lang === currentLang);
+  });
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem(LANG_KEY, lang);
+  applyLangToCategories();
+  applyLangToButtons();
+  renderAll();
+}
+
+// Generate FACTORY_DEFAULT in current language from I18N keys
+function getFactoryDefault(lang) {
+  const result = {};
+  for (const [catId, keys] of Object.entries(I18N.defaults)) {
+    result[catId] = keys.map(k => I18N.items[k]?.[lang] || I18N.items[k]?.en || k);
+  }
+  return result;
+}
+
+// ================================================================
+// CONSTANTS & FIREBASE INIT
+// ================================================================
 const TEMPLATE_KEY   = "shoppingList.v3.template";
 const SESSION_LS_KEY = "shoppingList.v3.session";
 
@@ -707,22 +603,6 @@ const CATEGORY_IDS = [
   "snacks","fruits-vegetables","others"
 ];
 
-const FACTORY_DEFAULT = {
-  "dairy-products":    ["Butter","Milk","Cheese","Yogurt"],
-  "bakery-grains":     ["Bread","Pasta","Rice"],
-  "pantry-staples":    ["Olive Oil","Salt","Sugar","Flour","Baking Powder","Vinegar","Canned Beans","Canned Tomatoes","Spices","Condiments"],
-  "breakfast":         ["Coffee beans","Tea","Muesli","Jam"],
-  "personal-care":     ["Toilet Paper","Hand Soap","Body Soap","Shampoo","Q-Tips","Deodorant","Toothpaste","Toothbrush"],
-  "cleaning-supplies": ["Laundry Detergent","Dishwasher Tabs","Cleaning Supplies","Dish Soap","Sponges","Toilet flush freshener"],
-  "household-items":   ["Trash Bags","Küchenrolle","Aluminum Foil","Backpapier"],
-  "snacks":            ["Almonds, walnuts…","Snacks"],
-  "fruits-vegetables": ["Avocadoes"],
-  "others":            ["Batteries"]
-};
-
-// =================================================================
-// FIREBASE INIT
-// =================================================================
 const IS_CONFIGURED = FIREBASE_CONFIG.apiKey !== "YOUR_API_KEY";
 let db = null;
 let unsubscribe = null;
@@ -737,9 +617,9 @@ if (IS_CONFIGURED) {
   }
 }
 
-// =================================================================
+// ================================================================
 // SESSION
-// =================================================================
+// ================================================================
 function genSessionId() {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   let id = "";
@@ -754,10 +634,7 @@ function getOrCreateSession() {
     return hash;
   }
   const stored = localStorage.getItem(SESSION_LS_KEY);
-  if (stored) {
-    location.hash = stored;
-    return stored;
-  }
+  if (stored) { location.hash = stored; return stored; }
   const id = genSessionId();
   localStorage.setItem(SESSION_LS_KEY, id);
   location.hash = id;
@@ -778,18 +655,17 @@ function switchToSession(id) {
   if (db) attachListener(id);
 }
 
-// =================================================================
-// TEMPLATE  (shared via Firestore, falls back to localStorage)
-// =================================================================
+// ================================================================
+// TEMPLATE
+// ================================================================
 let template = null;
 
 function loadTemplate() {
-  // Only used as initial fallback before Firestore responds
   try {
     const raw = localStorage.getItem(TEMPLATE_KEY);
-    template = raw ? JSON.parse(raw) : deepClone(FACTORY_DEFAULT);
+    template = raw ? JSON.parse(raw) : deepClone(getFactoryDefault("en"));
   } catch (_) {
-    template = deepClone(FACTORY_DEFAULT);
+    template = deepClone(getFactoryDefault("en"));
   }
   for (const id of CATEGORY_IDS) {
     if (!Array.isArray(template[id])) template[id] = [];
@@ -797,9 +673,7 @@ function loadTemplate() {
 }
 
 function saveTemplate() {
-  // Cache locally for offline fallback
   localStorage.setItem(TEMPLATE_KEY, JSON.stringify(template));
-  // Write to Firestore — include template in the session doc
   scheduleTemplateWrite();
 }
 
@@ -817,9 +691,9 @@ function scheduleTemplateWrite() {
 
 function deepClone(obj) { return JSON.parse(JSON.stringify(obj)); }
 
-// =================================================================
-// STATE  (shared via Firestore)
-// =================================================================
+// ================================================================
+// STATE
+// ================================================================
 let state = null;
 let writeTimer = null;
 
@@ -838,7 +712,6 @@ function stateFromTemplate() {
 
 function norm(s) { return String(s || "").trim().toLowerCase(); }
 
-// Debounced write: waits 350ms after last change before writing
 function scheduleWrite() {
   if (!db) {
     localStorage.setItem("shoppingList.v3.state." + currentSessionId(), JSON.stringify(state));
@@ -848,18 +721,13 @@ function scheduleWrite() {
   if (writeTimer) clearTimeout(writeTimer);
   writeTimer = setTimeout(() => {
     const sid = currentSessionId();
-    // Write state only (template has its own write path via scheduleTemplateWrite)
     db.collection("sessions").doc(sid)
       .set({ state }, { merge: true })
-      .then(() => {
-        setSyncStatus("online");
-        writeSummary(sid);
-      })
+      .then(() => { setSyncStatus("online"); writeSummary(sid); })
       .catch(e => { console.error("Write failed:", e); setSyncStatus("offline"); });
   }, 350);
 }
 
-// Flat summary document — easy for KWGT to parse
 function buildSummary() {
   const LABELS = {
     "dairy-products":    "🥛 Dairy",
@@ -873,36 +741,27 @@ function buildSummary() {
     "fruits-vegetables": "🥦 Fruits & Veg",
     "others":            "📦 Others"
   };
-
   let totalItems = 0, totalUnchecked = 0;
-  const sectionLines = [];
-  const uncheckedItems = [];
-
+  const sectionLines = [], uncheckedItems = [];
   for (const id of CATEGORY_IDS) {
     const items = state[id] || [];
     if (items.length === 0) continue;
     const unchecked = items.filter(it => !it.crossed);
-    totalItems    += items.length;
+    totalItems += items.length;
     totalUnchecked += unchecked.length;
     if (unchecked.length > 0) {
       sectionLines.push(`${LABELS[id]}: ${unchecked.length}/${items.length}`);
-      unchecked.forEach(it => uncheckedItems.push(it.text));
+      unchecked.forEach(it => uncheckedItems.push(translateItemText(it.text)));
     }
   }
-
-  const preview = uncheckedItems.slice(0, 12).join(" · ") || "All done! ✓";
+  const preview  = uncheckedItems.slice(0, 12).join(" · ") || "All done! ✓";
   const sections = sectionLines.join("\n") || "Nothing to buy";
-
-  return { totalItems, totalUnchecked, preview, sections,
-           updated: new Date().toISOString() };
+  return { totalItems, totalUnchecked, preview, sections, updated: new Date().toISOString() };
 }
 
 function writeSummary(sid) {
   if (!db) return;
-  const summary = buildSummary();
-  db.collection("summaries").doc(sid)
-    .set(summary)
-    .catch(e => console.warn("Summary write failed:", e));
+  db.collection("summaries").doc(sid).set(buildSummary()).catch(e => console.warn("Summary write failed:", e));
 }
 
 function attachListener(sessionId) {
@@ -910,10 +769,9 @@ function attachListener(sessionId) {
   setSyncStatus("syncing");
   const ref = db.collection("sessions").doc(sessionId);
 
-  // If doc doesn't exist yet, seed both state and template from factory default
   ref.get().then(snap => {
     if (!snap.exists) {
-      template = deepClone(FACTORY_DEFAULT);
+      template = deepClone(getFactoryDefault("en")); // always store English as canonical
       state = stateFromTemplate();
       ref.set({ state, template }).catch(console.error);
       localStorage.setItem(TEMPLATE_KEY, JSON.stringify(template));
@@ -925,35 +783,26 @@ function attachListener(sessionId) {
     snap => {
       if (snap.metadata.hasPendingWrites) return;
       if (!snap.exists) return;
-
       const data = snap.data();
-
-      // Sync template from Firestore
       if (data?.template) {
         template = data.template;
-        for (const id of CATEGORY_IDS)
-          if (!Array.isArray(template[id])) template[id] = [];
+        for (const id of CATEGORY_IDS) if (!Array.isArray(template[id])) template[id] = [];
         localStorage.setItem(TEMPLATE_KEY, JSON.stringify(template));
       }
-
       if (data?.state) {
         state = data.state;
-        for (const id of CATEGORY_IDS)
-          if (!Array.isArray(state[id])) state[id] = [];
+        for (const id of CATEGORY_IDS) if (!Array.isArray(state[id])) state[id] = [];
         renderAll();
       }
       setSyncStatus(snap.metadata.fromCache ? "offline" : "online");
     },
-    err => {
-      console.error("Listener:", err);
-      setSyncStatus("offline");
-    }
+    err => { console.error("Listener:", err); setSyncStatus("offline"); }
   );
 }
 
-// =================================================================
+// ================================================================
 // SYNC STATUS UI
-// =================================================================
+// ================================================================
 function setSyncStatus(status) {
   const pill  = document.getElementById("sync-pill");
   const label = document.getElementById("sync-label");
@@ -962,9 +811,9 @@ function setSyncStatus(status) {
   label.textContent = status === "online" ? "Live" : status === "syncing" ? "Syncing…" : "Offline";
 }
 
-// =================================================================
+// ================================================================
 // TOAST
-// =================================================================
+// ================================================================
 let toastTimer = null;
 function showToast(msg) {
   const t = document.getElementById("toast");
@@ -975,12 +824,33 @@ function showToast(msg) {
   toastTimer = setTimeout(() => t.classList.remove("show"), 2200);
 }
 
-// =================================================================
+// ================================================================
+// TEMPLATE MEMBERSHIP — handles cross-language matching
+// ================================================================
+function isInTemplate(listId, text) {
+  const key = reverseItemLookup[norm(text)];
+  return (template[listId] || []).some(x => {
+    if (norm(x) === norm(text)) return true;
+    // Also match if both resolve to the same translation key
+    if (key && reverseItemLookup[norm(x)] === key) return true;
+    return false;
+  });
+}
+
+function removeFromTemplate(listId, text) {
+  const key = reverseItemLookup[norm(text)];
+  template[listId] = (template[listId] || []).filter(x => {
+    if (norm(x) === norm(text)) return false;
+    if (key && reverseItemLookup[norm(x)] === key) return false;
+    return true;
+  });
+}
+
+// ================================================================
 // RENDER
-// =================================================================
+// ================================================================
 function renderAll() {
   for (const id of CATEGORY_IDS) renderList(id);
-  // updateAllCounts is wired after wireAll() sets it up
   if (typeof updateAllCounts === "function") updateAllCounts();
 }
 
@@ -993,13 +863,14 @@ function renderList(listId) {
   items.forEach((item, idx) => {
     const li = document.createElement("li");
 
-    // Item text (tap to toggle)
+    // Display the text in the current language (translated if it's a known default item)
+    const displayText = translateItemText(item.text);
+
     const span = document.createElement("span");
     span.className = "item-text" + (item.crossed ? " crossed" : "");
-    span.textContent = item.text;
+    span.textContent = displayText;
     span.addEventListener("click", () => toggleCross(listId, idx));
 
-    // ✓ / undo button
     const crossBtn = document.createElement("button");
     crossBtn.type = "button";
     crossBtn.textContent = item.crossed ? "↩" : "✓";
@@ -1007,7 +878,6 @@ function renderList(listId) {
     crossBtn.className = "item-btn";
     crossBtn.addEventListener("click", () => toggleCross(listId, idx));
 
-    // Delete from current list
     const delBtn = document.createElement("button");
     delBtn.type = "button";
     delBtn.textContent = "✕";
@@ -1019,20 +889,19 @@ function renderList(listId) {
       renderList(listId);
     });
 
-    // Remove from default template (local only)
     const rmDefBtn = document.createElement("button");
     rmDefBtn.type = "button";
     rmDefBtn.textContent = "− default";
     rmDefBtn.className = "item-btn rm-default";
-    const inDef = (template[listId] || []).some(x => norm(x) === norm(item.text));
+    const inDef = isInTemplate(listId, item.text);
     if (!inDef) {
       rmDefBtn.disabled = true;
       rmDefBtn.title = "Not in your local default";
     } else {
       rmDefBtn.title = "Remove from your default list (local to this device)";
       rmDefBtn.addEventListener("click", () => {
-        if (!confirm(`Remove "${item.text}" from your default list?\n(Local to this device only)`)) return;
-        template[listId] = (template[listId] || []).filter(x => norm(x) !== norm(item.text));
+        if (!confirm(`Remove "${displayText}" from your default list?\n(Local to this device only)`)) return;
+        removeFromTemplate(listId, item.text);
         state[listId].splice(idx, 1);
         saveTemplate();
         scheduleWrite();
@@ -1053,17 +922,19 @@ function toggleCross(listId, idx) {
   renderList(listId);
 }
 
-// =================================================================
+// ================================================================
 // ADDING ITEMS
-// =================================================================
+// ================================================================
 function addCurrent(listId, inputId) {
   const input = document.getElementById(inputId);
   if (!input) return;
   const text = input.value.trim();
   if (!text) return;
+  // Store canonical English if it's a known item; otherwise store as typed
+  const canonical = toCanonical(text);
   if (!state[listId]) state[listId] = [];
-  if (!state[listId].some(it => norm(it.text) === norm(text)))
-    state[listId].push({ text, crossed: false });
+  if (!state[listId].some(it => norm(it.text) === norm(canonical) || norm(it.text) === norm(text)))
+    state[listId].push({ text: canonical, crossed: false });
   input.value = "";
   scheduleWrite();
   renderList(listId);
@@ -1074,22 +945,24 @@ function addDefault(listId, inputId) {
   if (!input) return;
   const text = input.value.trim();
   if (!text) return;
+  const canonical = toCanonical(text);
   if (!template[listId]) template[listId] = [];
-  if (!template[listId].some(x => norm(x) === norm(text))) template[listId].push(text);
+  if (!isInTemplate(listId, text)) template[listId].push(canonical);
   if (!state[listId]) state[listId] = [];
-  if (!state[listId].some(it => norm(it.text) === norm(text)))
-    state[listId].push({ text, crossed: false });
+  if (!state[listId].some(it => norm(it.text) === norm(canonical) || norm(it.text) === norm(text)))
+    state[listId].push({ text: canonical, crossed: false });
   input.value = "";
   saveTemplate();
   scheduleWrite();
   renderList(listId);
-  showToast(`"${text}" added to your default list`);
+  showToast(`"${translateItemText(canonical)}" added to your default list`);
 }
 
-// =================================================================
-// WIRE UP ALL BUTTONS
-// =================================================================
-let updateAllCounts = () => {}; // assigned inside wireAll after state is ready
+// ================================================================
+// WIRE UP
+// ================================================================
+let updateAllCounts = () => {};
+
 function wireAll() {
   // Add / Add-to-default buttons
   document.querySelectorAll("button[data-action][data-list][data-input]").forEach(btn => {
@@ -1099,7 +972,7 @@ function wireAll() {
     });
   });
 
-  // Enter key → Add (current)
+  // Enter key → Add current
   document.querySelectorAll(".add-row input").forEach(input => {
     input.addEventListener("keydown", e => {
       if (e.key !== "Enter") return;
@@ -1139,22 +1012,19 @@ function wireAll() {
     }
   });
 
-  // Enter code (join)
+  // Join
   document.getElementById("join-btn")?.addEventListener("click", () => {
     document.getElementById("join-input").value = "";
     document.getElementById("join-overlay").classList.add("active");
     setTimeout(() => document.getElementById("join-input").focus(), 80);
   });
-
   document.getElementById("modal-cancel")?.addEventListener("click", () => {
     document.getElementById("join-overlay").classList.remove("active");
   });
-
   document.getElementById("join-overlay")?.addEventListener("click", e => {
     if (e.target === document.getElementById("join-overlay"))
       document.getElementById("join-overlay").classList.remove("active");
   });
-
   document.getElementById("modal-join")?.addEventListener("click", () => {
     const val = document.getElementById("join-input").value.trim().toUpperCase();
     if (val.length < 3) { showToast("Please enter a valid session code"); return; }
@@ -1162,7 +1032,6 @@ function wireAll() {
     switchToSession(val);
     showToast("Joined session " + val);
   });
-
   document.getElementById("join-input")?.addEventListener("keydown", e => {
     if (e.key === "Enter") document.getElementById("modal-join")?.click();
     document.getElementById("join-input").value = document.getElementById("join-input").value.toUpperCase();
@@ -1174,17 +1043,23 @@ function wireAll() {
     switchToSession(genSessionId());
   });
 
-  // Collapse + count + move sections (all local per device)
+  // Language toggle
+  document.querySelectorAll(".lang-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      setLang(btn.dataset.lang);
+      showToast(`Language: ${btn.dataset.lang.toUpperCase()}`);
+    });
+  });
+
+  // Collapse + count + move (all local per device)
   const COLLAPSE_KEY = "shoppingList.v3.collapsed";
   const ORDER_KEY    = "shoppingList.v3.order";
-
   const collapsedSet = new Set(JSON.parse(localStorage.getItem(COLLAPSE_KEY) || "[]"));
 
   function saveCollapsed() {
     localStorage.setItem(COLLAPSE_KEY, JSON.stringify([...collapsedSet]));
   }
 
-  // ── Section order ──────────────────────────────────────────────
   function getSectionOrder() {
     try {
       const saved = JSON.parse(localStorage.getItem(ORDER_KEY) || "null");
@@ -1222,11 +1097,7 @@ function wireAll() {
     const items = state?.[listId] || [];
     const total = items.length;
     const remaining = items.filter(it => !it.crossed).length;
-    if (total === 0) {
-      el.textContent = "";
-      el.className = "cat-count";
-      return;
-    }
+    if (total === 0) { el.textContent = ""; el.className = "cat-count"; return; }
     el.textContent = `(${remaining}/${total})`;
     el.className = "cat-count " + (remaining === 0 ? "all-done" : "has-remaining");
   }
@@ -1235,14 +1106,12 @@ function wireAll() {
     for (const id of CATEGORY_IDS) updateCount(id);
   };
 
-  // ── Init order & collapse state ────────────────────────────────
   applyOrder();
 
   document.querySelectorAll(".category[data-cat]").forEach(section => {
     const catId = section.dataset.cat;
     if (collapsedSet.has(catId)) section.classList.add("collapsed");
 
-    // Collapse toggle — only fires if not a move-btn click
     section.querySelector("h2").addEventListener("click", e => {
       if (e.target.closest(".move-btn")) return;
       const isNowCollapsed = section.classList.toggle("collapsed");
@@ -1250,7 +1119,6 @@ function wireAll() {
       saveCollapsed();
     });
 
-    // Move buttons
     section.querySelectorAll(".move-btn").forEach(btn => {
       btn.addEventListener("click", e => {
         e.stopPropagation();
@@ -1259,15 +1127,12 @@ function wireAll() {
         const idx = sections.indexOf(section);
         const container = document.querySelector(".container");
         const footer = document.querySelector(".footer");
-
         if (dir === "up" && idx > 0) {
           container.insertBefore(section, sections[idx - 1]);
         } else if (dir === "down" && idx < sections.length - 1) {
-          // insertBefore the element after the next sibling
           const after = sections[idx + 2];
           after ? container.insertBefore(section, after) : container.insertBefore(section, footer);
         }
-
         saveOrder();
         updateMoveBtnStates();
       });
@@ -1278,19 +1143,22 @@ function wireAll() {
   updateAllCounts();
 }
 
-// =================================================================
+// ================================================================
 // INIT
-// =================================================================
+// ================================================================
+buildReverseLookup();
 loadTemplate();
 
 const sessionId = getOrCreateSession();
 document.getElementById("session-code-display").textContent = sessionId;
 
+applyLangToCategories();
+applyLangToButtons();
+
 if (db) {
   state = emptyState();
   attachListener(sessionId);
 } else {
-  // No Firebase config → localStorage fallback
   setSyncStatus("offline");
   const localKey = "shoppingList.v3.state." + sessionId;
   const raw = localStorage.getItem(localKey);
